@@ -25,12 +25,12 @@
 #define EWMultiColumnTable_BorderWidth 1.0f
 #define EWMultiColumnTable_BorderColorGray 212.0f/255.0f
 
-#define EWMultiColumnTable_DefaultCellHeight 31.0f
-#define EWMultiColumnTable_DefaultCellWidth 252.0f
-#define EWMultiColumnTable_DefaultTopHeaderHeight 298.0f
-#define EWMultiColumnTable_DefaultLeftHeaderWidth 111.0f
-#define EWMultiColumnTable_DefaultSectionHeaderHeight 31.0f
-#define EWMultiColumnTable_DefaultHeaderCellWidth 80.0f
-#define EWMultiColumnTable_BoldLineWidth 3.0f
+#define EWMultiColumnTable_DefaultCellHeight 30.0f
+#define EWMultiColumnTable_DefaultCellWidth 90.0f
+#define EWMultiColumnTable_DefaultTopHeaderHeight 30.0f
+#define EWMultiColumnTable_DefaultLeftHeaderWidth 90.0f
+#define EWMultiColumnTable_DefaultSectionHeaderHeight 30.0f
+#define EWMultiColumnTable_DefaultHeaderCellWidth 90.0f
+#define EWMultiColumnTable_BoldLineWidth 2.0f
 #define EWMultiColumnTable_NormalLineWidth 1.0f
 #define EWMultiColumnTable_LineGray 223.0f/255.0f
