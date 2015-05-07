@@ -28,6 +28,7 @@
 #import "EWMultiColumnTableViewBGScrollView.h"
 
 @protocol EWMultiColumnTableViewDataSource;
+@protocol EWMultiColumnTableViewDelegate;
 
 typedef enum __EWMultiColumnTableViewColumnPosition {
     EWMultiColumnTableViewColumnPositionLeft,
@@ -70,6 +71,7 @@ typedef enum __EWMultiColumnTableViewColumnPosition {
 }
 
 @property (nonatomic, assign) id<EWMultiColumnTableViewDataSource> dataSource;
+@property (nonatomic, assign) id<EWMultiColumnTableViewDelegate> delegate;
 
 @property (nonatomic, assign) CGFloat cellHeight;
 @property (nonatomic, assign) CGFloat cellWidth;
@@ -162,4 +164,16 @@ typedef enum __EWMultiColumnTableViewColumnPosition {
 // height
 - (CGFloat)tableView:(EWMultiColumnTableView *)tableView heightForHeaderCellInSectionHeaderAtSection:(NSInteger)section;
 
+@end
+
+@protocol EWMultiColumnTableViewDelegate <NSObject>
+@optional
+- (void)tableView:(EWMultiColumnTableView *)tableView
+didSelectRowAtColumn:(NSInteger)column
+          section:(NSInteger)section
+              row:(NSInteger)row;
+
+- (void)tableView:(EWMultiColumnTableView *)tableView
+didSelectRowAtColumn:(NSInteger)column
+          section:(NSInteger)section;
 @end

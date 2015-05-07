@@ -26,6 +26,9 @@
 
 #define ROWS 100
 
+#define cellWith 90.f
+#define cellHight 30.f
+
 @interface MultiColumnTableViewViewController()
 
 - (void)handleDoubleTap:(UITapGestureRecognizer *)recognizer;
@@ -73,7 +76,7 @@
     numberOfSections = 10;
     
 
-    colWidth = 90.0f;
+    colWidth = cellWith;
     
     data = [[NSMutableArray alloc] initWithCapacity:numberOfSections * 5];
     sectionHeaderData = [[NSMutableArray alloc] initWithCapacity:numberOfSections];
@@ -134,6 +137,7 @@
 //    tblView.boldSeperatorLineWidth = 10.0f;
 //    tblView.normalSeperatorLineWidth = 10.0f;
     tblView.dataSource = self;
+    tblView.delegate = self;
     tblView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     [self.view addSubview:tblView];
     
@@ -168,12 +172,7 @@
 
 - (UIView *)tableView:(EWMultiColumnTableView *)tableView cellForIndexPath:(NSIndexPath *)indexPath column:(NSInteger)col
 {
-    UILabel *l = [[[UILabel alloc] initWithFrame:CGRectMake(0.0f, 0.0f, colWidth, 30.0f)] autorelease];
-    l.numberOfLines = 0;
-    l.lineBreakMode = UILineBreakModeWordWrap;
-    l.textAlignment = NSTextAlignmentCenter;
-    l.textColor = [UIColor whiteColor];
-    l.backgroundColor = [UIColor blueColor];
+    UILabel *l = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 0.0f, cellWith, cellHight)];
     return l;
 }
 
@@ -182,27 +181,25 @@
     UILabel *l = (UILabel *)cell;
     l.text = [[[data objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] objectAtIndex:col];
     
-    CGRect f = l.frame;
-    f.size.width = [self tableView:tableView widthForColumn:col];
-    l.frame = f;
     l.textAlignment = NSTextAlignmentCenter;
     l.textColor = [UIColor whiteColor];
-    l.backgroundColor = [UIColor blackColor];
-    [l sizeToFit];
+    l.backgroundColor = [UIColor greenColor];
+
 }
 
 - (CGFloat)tableView:(EWMultiColumnTableView *)tableView heightForCellAtIndexPath:(NSIndexPath *)indexPath column:(NSInteger)col
 {
-    NSString *str = [[[data objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] objectAtIndex:col];
-    CGSize s = [str sizeWithFont:[UIFont systemFontOfSize:[UIFont systemFontSize]]
-               constrainedToSize:CGSizeMake([self tableView:tableView widthForColumn:col], MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
-    
-    return s.height + 20.0f;
+    return cellHight;
+//    NSString *str = [[[data objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] objectAtIndex:col];
+//    CGSize s = [str sizeWithFont:[UIFont systemFontOfSize:[UIFont systemFontSize]]
+//               constrainedToSize:CGSizeMake([self tableView:tableView widthForColumn:col], MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap];
+//    
+//    return s.height + 20.0f;
 }
 
 - (CGFloat)tableView:(EWMultiColumnTableView *)tableView widthForColumn:(NSInteger)column
 {
-    return colWidth;
+    return cellWith;
 }
 
 - (NSInteger)tableView:(EWMultiColumnTableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -212,10 +209,7 @@
 
 - (UIView *)tableView:(EWMultiColumnTableView *)tableView sectionHeaderCellForSection:(NSInteger)section column:(NSInteger)col
 {
-    UILabel *l = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 0.0f, [self tableView:tableView widthForColumn:col], 30.0f)];
-    l.textAlignment = NSTextAlignmentCenter;
-    l.textColor = [UIColor whiteColor];
-    l.backgroundColor = [UIColor yellowColor];
+    UILabel *l = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 0.0f, cellWith, cellHight)];
     return l;
 }
 
@@ -223,14 +217,9 @@
 {
     UILabel *l = (UILabel *)cell;
     l.text = [NSString stringWithFormat:@"S %zd C %zd", section, col];
-
-    CGRect f = l.frame;
-    f.size.width = [self tableView:tableView widthForColumn:col];
-    l.frame = f;
     l.textAlignment = NSTextAlignmentCenter;
     l.textColor = [UIColor whiteColor];
     l.backgroundColor = [UIColor purpleColor];
-    [l sizeToFit];
 }
 
 - (NSInteger)numberOfColumnsInTableView:(EWMultiColumnTableView *)tableView
@@ -242,10 +231,7 @@
 
 - (UIView *)tableView:(EWMultiColumnTableView *)tableView headerCellForIndexPath:(NSIndexPath *)indexPath
 {
-    UILabel *l = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 90.0f, 30.0f)];
-    l.textAlignment = NSTextAlignmentCenter;
-    l.textColor = [UIColor whiteColor];
-    l.backgroundColor = [UIColor magentaColor];
+    UILabel *l = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 0.0f, cellWith, cellHight)];
     return l;
 }
 
@@ -260,20 +246,17 @@
 
 - (CGFloat)tableView:(EWMultiColumnTableView *)tableView heightForHeaderCellAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 30.0f;
+    return cellHight;
 }
 
 - (CGFloat)tableView:(EWMultiColumnTableView *)tableView heightForSectionHeaderCellAtSection:(NSInteger)section column:(NSInteger)col
 {
-    return 30.0f;
+    return cellHight;
 }
 
 - (UIView *)tableView:(EWMultiColumnTableView *)tableView headerCellInSectionHeaderForSection:(NSInteger)section
 {
-    UILabel *l = [[[UILabel alloc] initWithFrame:CGRectMake(0.0f, 0.0f, [self widthForHeaderCellOfTableView:tableView], 30.0f)] autorelease];
-    l.textAlignment = NSTextAlignmentCenter;
-    l.textColor = [UIColor whiteColor];
-    l.backgroundColor = [UIColor orangeColor];
+    UILabel *l = [[[UILabel alloc] initWithFrame:CGRectMake(0.0f, 0.0f, cellWith, cellHight)] autorelease];
     return l;
 
 }
@@ -284,18 +267,18 @@
     l.text = [NSString stringWithFormat:@"Section %zd", section];
     l.textAlignment = NSTextAlignmentCenter;
     l.textColor = [UIColor whiteColor];
-    l.backgroundColor = [UIColor grayColor];
+    l.backgroundColor = [UIColor blueColor];
 }
 
 - (CGFloat)widthForHeaderCellOfTableView:(EWMultiColumnTableView *)tableView
 {
-    return 90.0f;
+    return cellWith;
 }
 
 
 - (UIView *)tableView:(EWMultiColumnTableView *)tableView headerCellForColumn:(NSInteger)col
 {
-    UILabel *l =  [[[UILabel alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 90.0f, 30.0f)] autorelease];
+    UILabel *l =  [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 0.0f, cellWith, cellHight)];
     l.text = [NSString stringWithFormat:@"Column: %zd", col];
     l.userInteractionEnabled = YES;
     
@@ -306,24 +289,24 @@
     
     l.textAlignment = NSTextAlignmentCenter;
     l.textColor = [UIColor whiteColor];
-    l.backgroundColor = [UIColor darkGrayColor];
+    l.backgroundColor = [UIColor orangeColor];
 
     return l;
 }
 
 - (UIView *)topleftHeaderCellOfTableView:(EWMultiColumnTableView *)tableView
 {
-    UILabel *l =  [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 90.0f, [self heightForHeaderCellOfTableView:tableView])];
+    UILabel *l =  [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 0.0f, cellWith, cellHight)];
     l.text = @"Products";
     l.textAlignment = NSTextAlignmentCenter;
     l.textColor = [UIColor whiteColor];
-    l.backgroundColor = [UIColor cyanColor];
+    l.backgroundColor = [UIColor blackColor];
     return l;
 }
 
 - (CGFloat)heightForHeaderCellOfTableView:(EWMultiColumnTableView *)tableView
 {
-    return 30.0f;
+    return cellHight;
 }
 
 - (void)tableView:(EWMultiColumnTableView *)tableView swapDataOfColumn:(NSInteger)col1 andColumn:(NSInteger)col2
@@ -358,6 +341,21 @@
     
     [tblView reloadData];
 
+}
+
+- (void)tableView:(EWMultiColumnTableView *)tableView
+didSelectRowAtColumn:(NSInteger)column
+          section:(NSInteger)section
+              row:(NSInteger)row
+{
+    NSLog(@"z  column:%zd, section:%zd, row:%zd", column, section, row);
+}
+
+- (void)tableView:(EWMultiColumnTableView *)tableView
+didSelectRowAtColumn:(NSInteger)column
+          section:(NSInteger)section
+{
+    NSLog(@"z  column:%zd, section:%zd", column, section);
 }
 
 @end

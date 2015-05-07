@@ -136,6 +136,10 @@
         recognizer.minimumPressDuration = 1.0;
         [tblView addGestureRecognizer:recognizer];
         
+        UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc]
+                                                 initWithTarget:self action:@selector(tapPressed:)];
+        [tblView addGestureRecognizer:tapRecognizer];
+        
         NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
         [center addObserver:self selector:@selector(orientationChanged:) name:UIDeviceOrientationDidChangeNotification object:nil];
     }
@@ -547,7 +551,7 @@
             
             return container;
         } else {
-            return [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
+            return [[UIView alloc] initWithFrame:CGRectZero];
         }
     }
 }
@@ -753,6 +757,7 @@
 
 - (CGFloat)widthForLeftHeaderCell
 {
+    
     if (respondsToLeftHeaderCell) {
         if (respondsToWidthForHeaderCell)
             return [dataSource widthForHeaderCellOfTableView:self];
@@ -800,6 +805,35 @@
     }
     
     return -1;
+}
+
+- (NSArray *)rowOfPointInTblView:(CGPoint)point
+{
+    CGFloat y = point.y, h = sectionHeaderHeight + boldSeperatorLineWidth;
+    NSInteger rw = -1, sctn = -1;
+    NSInteger sections = [dataSource numberOfSectionsInTableView:self];
+    
+    for (sctn = 0; sctn<sections; sctn++) {
+        NSInteger rows = [dataSource tableView:self numberOfRowsInSection:sctn];
+        h += (sectionHeaderHeight + normalSeperatorLineWidth);
+        if (y < h) {
+            return @[@(sctn), @(-1)];
+        }
+        BOOL bl = [sectionFoldingStatus[sctn] boolValue];
+        if (bl) {
+            continue;
+        }
+        else
+        {
+            for (rw = 0; rw < rows; rw++) {
+                h += (cellHeight + normalSeperatorLineWidth);
+                if (y < h) {
+                    return @[@(sctn), @(rw)];
+                }
+            }
+        }
+    }
+    return @[@(-1), @(-1)];
 }
 
 - (NSMutableArray *)indexPathsOfSection:(NSInteger)section headerRow:(NSInteger)row
@@ -864,11 +898,32 @@
                 break;
             } 
             default:
-                NSLog(@"recognizer.state: %d", recognizer.state);
+                NSLog(@"recognizer.state: %zd", recognizer.state);
                 break;
         }
     }
     
+}
+
+-(void)tapPressed:(UILongPressGestureRecognizer *)recognizer
+{
+    CGPoint point = [recognizer locationInView:tblView];
+    NSInteger col = [self columnOfPointInTblView:point];
+    NSArray *arr = [self rowOfPointInTblView:point];
+    if ([_delegate respondsToSelector:@selector(tableView:didSelectRowAtColumn:section:row:)]) {
+        NSInteger section = [arr[0] integerValue];
+        NSInteger row = [arr[1] integerValue];
+        if (section != -1 && col != -1) {
+            if (row != -1) {
+                [_delegate tableView:self didSelectRowAtColumn:col section:section row:row];
+            }
+            else
+            {
+                [_delegate tableView:self didSelectRowAtColumn:col section:section];
+            }
+            
+        }
+    }
 }
 
 @end

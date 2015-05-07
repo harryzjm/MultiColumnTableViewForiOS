@@ -24,7 +24,10 @@
 #import <UIKit/UIKit.h>
 #import "EWMultiColumnTableView.h"
 
-@interface MultiColumnTableViewViewController : UIViewController<EWMultiColumnTableViewDataSource> {
+@interface MultiColumnTableViewViewController : UIViewController
+<EWMultiColumnTableViewDataSource,
+EWMultiColumnTableViewDelegate>
+{
     NSMutableArray *data;
     NSMutableArray *sectionHeaderData;
     
